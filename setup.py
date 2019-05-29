@@ -3,28 +3,17 @@
 
 import os
 from distutils.core import setup
-from distutils.extension import Extension
-
-czipfile_ext_modules = []
-czipfile_build_ext = {}
-
-# Attempt to compile from Cython if available; use the .c if not
-try:
-    from Cython.Distutils import build_ext
-    czipfile_ext_modules.append('czipfile.pyx')
-    czipfile_build_ext['build_ext'] = build_ext
-except ImportError:
-    from distutils.command.build_ext import build_ext
-    print "cython not found, using previously-cython'd .c file."
-    czipfile_ext_modules.append('czipfile.c')
-    czipfile_build_ext['build_ext'] = build_ext
+from Cython.Distutils.extension import Extension
+from Cython.Distutils import build_ext
+from Cython.Build import cythonize
 
 # Utility function to read the README file.  
 # Used for the long_description.  It's nice, because now 1) we have a top level
 # README file and 2) it's easier to type in the README file than to put a raw
 # string in below ...
 def read(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+    with open(os.path.join(os.path.dirname(__file__), fname)) as f:
+        return f.read()
 
 setup(
     name = 'czipfile',
@@ -41,6 +30,6 @@ setup(
         'Development Status :: 5 - Production/Stable',
         'License :: OSI Approved :: Python Software Foundation License',
         ],
-    ext_modules = [Extension('czipfile', czipfile_ext_modules)],
-    cmdclass = czipfile_build_ext,
+    ext_modules = cythonize('czipfile.pyx', compiler_directives=dict(language_level=3), annotate=True),
+    cmdclass = {'build_ext': build_ext},
 )
