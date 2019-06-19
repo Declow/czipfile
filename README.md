@@ -1,0 +1,1 @@
+Python 3 port of [czipfile](https://github.com/V-E-O/czipfile): simply replacing [`_ZipDecrypter` in `zipfile.py`](https://github.com/python/cpython/blob/3.7/Lib/zipfile.py) with [`_ZipDecrypter` in `czipfile.pyx`](https://github.com/V-E-O/czipfile/czipfile.pyx)
